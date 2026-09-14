@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "source ~/.nvm/nvm.sh && nvm use 20.20.2 >/dev/null && npm run start -w api"],
+      "port": 3000
+    },
+    {
+      "name": "dashboard",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "source ~/.nvm/nvm.sh && nvm use 20.20.2 >/dev/null && npm run dev -w dashboard"],
+      "port": 5173
+    }
+  ]
+}

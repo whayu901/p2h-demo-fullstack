@@ -1,0 +1,9 @@
+node_modules
+dist
+*.sqlite
+.expo
+.env
+.env.local
+ios
+android
+web-build

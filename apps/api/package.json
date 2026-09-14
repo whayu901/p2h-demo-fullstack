@@ -1,0 +1,29 @@
+{
+  "name": "api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start:dev": "nest start --watch",
+    "start": "nest start",
+    "build": "nest build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "db:reset": "node -e \"const fs=require('fs');fs.rmSync('data/demo.sqlite',{force:true});fs.rmSync('uploads',{recursive:true,force:true});console.log('reset ok');\""
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.2.3",
+    "@nestjs/core": "^11.2.3",
+    "@nestjs/platform-express": "^11.2.3",
+    "@nestjs/typeorm": "^11.0.0",
+    "@p2h/shared": "*",
+    "better-sqlite3": "^12.11.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "typeorm": "^0.3.31"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.24",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.20.2",
+    "typescript": "^5.5.4"
+  }
+}

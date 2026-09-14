@@ -1,0 +1,16 @@
+{
+  "name": "p2h-p5m-demo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build:shared": "npm run build -w @p2h/shared",
+    "postinstall": "npm run build:shared",
+    "api": "npm run start:dev -w api",
+    "dashboard": "npm run dev -w dashboard",
+    "mobile": "npm run start -w mobile",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}

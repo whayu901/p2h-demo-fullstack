@@ -1,0 +1,18 @@
+{
+  "name": "@p2h/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared types and static form definitions for P2H/P5M apps",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "~5.5.4"
+  }
+}
