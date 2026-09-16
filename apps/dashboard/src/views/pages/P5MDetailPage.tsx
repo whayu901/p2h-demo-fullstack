@@ -20,10 +20,11 @@ import { useSafetyTalkDetail } from '../../controllers/useSafetyTalkDetail';
 import { AnchorTabs } from '../components/AnchorTabs';
 import { DataStateBox } from '../components/DataStateBox';
 import { FactItem } from '../components/FactItem';
+import { IntegrityChip } from '../components/IntegrityChip';
 import { P5MMiniMap } from '../components/map/MiniMap';
 import { PageTitleBar } from '../components/PageTitleBar';
 import { Section } from '../components/Section';
-import { formatDate, formatCoordinates } from '../format';
+import { formatDate, formatCoordinates, formatHashShort } from '../format';
 
 const ANCHOR_SECTIONS = [
   { id: 'materi', label: 'Materi' },
@@ -51,10 +52,15 @@ export function P5MDetailPage(): React.JSX.Element {
           <PageTitleBar title="Detail Safety Talk P5M" />
 
           <Paper sx={{ p: 3, mb: 3 }}>
-            <Typography variant="h4">{safetyTalk.topik}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              {safetyTalk.departemenRegu}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 2 }}>
+              <Box>
+                <Typography variant="h4">{safetyTalk.topik}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {safetyTalk.departemenRegu}
+                </Typography>
+              </Box>
+              <IntegrityChip integritas={safetyTalk.integritas} />
+            </Box>
 
             <Stack direction="row" spacing={4} sx={{ mt: 3, flexWrap: 'wrap', rowGap: 2 }}>
               <FactItem label="Tanggal & jam" value={`${formatDate(safetyTalk.tanggal)} · ${safetyTalk.jamMulai}`} />
@@ -181,6 +187,11 @@ export function P5MDetailPage(): React.JSX.Element {
                     Buka di Google Maps
                   </Link>
                 </Box>
+              ) : null}
+              {safetyTalk.integritas?.hashRecord ? (
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
+                  Hash bukti: <code>{formatHashShort(safetyTalk.integritas.hashRecord)}</code>
+                </Typography>
               ) : null}
             </Paper>
           </Section>

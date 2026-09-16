@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import type { HasilItemP2H, Shift, StatusKelayakan } from '@p2h/shared';
+import type { HasilItemP2H, IntegritasRecord, Shift, StatusKelayakan, TindakLanjut } from '@p2h/shared';
 import { UnitEntity } from '../units/unit.entity';
 
 /** A submitted P2H inspection (table: inspections). */
@@ -78,4 +78,17 @@ export class InspectionEntity {
   /** ISO 8601 timestamp for when the API first stored this record. */
   @Column('text')
   diterimaPada!: string;
+
+  /**
+   * SMKP follow-up state for this inspection's findings. Defaulted from
+   * `statusKelayakan` on create; deliberately left untouched on a re-sync
+   * upsert so an operator's edit never erases a supervisor's decision or a
+   * mechanic's recommendation already recorded.
+   */
+  @Column('simple-json')
+  tindakLanjut!: TindakLanjut;
+
+  /** Evidence integrity checks (GPS mock / clock skew / payload hash) computed at sync time. */
+  @Column('simple-json', { nullable: true })
+  integritas!: IntegritasRecord | null;
 }

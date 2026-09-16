@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { theme } from './theme';
 import { Shell } from './views/layout/Shell';
+import { KepatuhanPage } from './views/pages/KepatuhanPage';
 import { MapPage } from './views/pages/MapPage';
 import { OverviewPage } from './views/pages/OverviewPage';
 import { P2HDetailPage } from './views/pages/P2HDetailPage';
@@ -29,6 +30,7 @@ function App(): React.JSX.Element {
               <Route path="/p5m/:id" element={<P5MDetailPage />} />
               <Route path="/peta" element={<MapPage />} />
               <Route path="/unit" element={<UnitPage />} />
+              <Route path="/kepatuhan" element={<KepatuhanPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

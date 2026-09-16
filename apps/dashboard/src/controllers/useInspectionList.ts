@@ -1,6 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import type { InspectionFilters, InspectionView, Shift, StatusKelayakan, UnitType } from '@p2h/shared';
+import type {
+  InspectionFilters,
+  InspectionView,
+  Shift,
+  StatusKelayakan,
+  StatusTindakLanjut,
+  UnitType,
+} from '@p2h/shared';
 
 import { fetchInspections } from '../models/api-client';
 
@@ -12,6 +19,7 @@ export interface InspectionFilterDraft {
   unitType: UnitType | '';
   shift: Shift | '';
   statusKelayakan: StatusKelayakan | '';
+  statusTindakLanjut: StatusTindakLanjut | '';
 }
 
 const EMPTY_DRAFT: InspectionFilterDraft = {
@@ -19,6 +27,7 @@ const EMPTY_DRAFT: InspectionFilterDraft = {
   unitType: '',
   shift: '',
   statusKelayakan: '',
+  statusTindakLanjut: '',
 };
 
 function toApiFilters(draft: InspectionFilterDraft): InspectionFilters {
@@ -35,6 +44,9 @@ function toApiFilters(draft: InspectionFilterDraft): InspectionFilters {
   if (draft.statusKelayakan) {
     filters.statusKelayakan = draft.statusKelayakan;
   }
+  if (draft.statusTindakLanjut) {
+    filters.statusTindakLanjut = draft.statusTindakLanjut;
+  }
   return filters;
 }
 
@@ -45,6 +57,7 @@ export interface InspectionListController {
   setUnitType: (value: UnitType | '') => void;
   setShift: (value: Shift | '') => void;
   setStatusKelayakan: (value: StatusKelayakan | '') => void;
+  setStatusTindakLanjut: (value: StatusTindakLanjut | '') => void;
   /** Applies the draft filters, triggering a refetch ("Go"). */
   applyFilters: () => void;
   /** Clears both draft and applied filters ("Reset"). */
@@ -79,6 +92,7 @@ export function useInspectionList(): InspectionListController {
     setUnitType: (unitType) => setDraft((prev) => ({ ...prev, unitType })),
     setShift: (shift) => setDraft((prev) => ({ ...prev, shift })),
     setStatusKelayakan: (statusKelayakan) => setDraft((prev) => ({ ...prev, statusKelayakan })),
+    setStatusTindakLanjut: (statusTindakLanjut) => setDraft((prev) => ({ ...prev, statusTindakLanjut })),
     applyFilters: () => setApplied(draft),
     resetFilters: () => {
       setDraft(EMPTY_DRAFT);

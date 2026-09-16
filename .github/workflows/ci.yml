@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.20.2
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm test -w api
+
+      - run: npm test -w @p2h/shared --if-present
+
+      - run: npm run build -w dashboard

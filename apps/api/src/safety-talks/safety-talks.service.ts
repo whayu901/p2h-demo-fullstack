@@ -1,7 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { hitungPesertaHadir, type SafetyTalkDto, type SafetyTalkView } from '@p2h/shared';
+import {
+  hitungPesertaHadir,
+  type IntegritasRecord,
+  type SafetyTalkDto,
+  type SafetyTalkView,
+} from '@p2h/shared';
 import { todayLocalDate } from '../common/date.util';
 import { SafetyTalkEntity } from './safety-talk.entity';
 
@@ -40,7 +45,12 @@ export class SafetyTalksService {
   }
 
   /** Upserts by client id within the given transactional manager. */
-  async upsert(dto: SafetyTalkDto, photoPath: string | null, manager: EntityManager): Promise<'created' | 'updated'> {
+  async upsert(
+    dto: SafetyTalkDto,
+    photoPath: string | null,
+    integritas: IntegritasRecord,
+    manager: EntityManager,
+  ): Promise<'created' | 'updated'> {
     const repository = manager.getRepository(SafetyTalkEntity);
     const existing = await repository.findOneBy({ id: dto.id });
 
@@ -64,6 +74,7 @@ export class SafetyTalksService {
       existing.longitude = dto.longitude;
       existing.catatan = dto.catatan;
       existing.dibuatPada = dto.dibuatPada;
+      existing.integritas = integritas;
       // diterimaPada is kept as the original server receive time, not overwritten.
       await repository.save(existing);
       return 'updated';
@@ -90,6 +101,7 @@ export class SafetyTalksService {
       catatan: dto.catatan,
       dibuatPada: dto.dibuatPada,
       diterimaPada: new Date().toISOString(),
+      integritas,
     });
     await repository.save(entity);
     return 'created';
@@ -118,6 +130,7 @@ export class SafetyTalksService {
       dibuatPada: entity.dibuatPada,
       jumlahHadir: hitungPesertaHadir(entity.peserta),
       diterimaPada: entity.diterimaPada,
+      integritas: entity.integritas,
     };
   }
 }

@@ -1,28 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { UPLOADS_ROOT } from '../common/paths.util';
+import { getAppConfig } from '../config/app-config';
+import { LocalDiskStorage } from './local-disk-storage';
+import { S3Storage } from './s3-storage';
+import type { PenyimpananFoto, PhotoFolder } from './penyimpanan-foto.interface';
 
-/** Matches an optional `data:image/...;base64,` prefix on an incoming photo string. */
-const DATA_URL_PREFIX = /^data:image\/\w+;base64,/;
-
-/** A folder under uploads/, one per record kind. */
-export type PhotoFolder = 'inspections' | 'safety-talks';
-
-/**
- * Writes base64-encoded JPEG photos to disk and returns the public,
- * web-servable path (relative to the /uploads static prefix).
- */
+/** Thin facade picking the configured PenyimpananFoto driver (STORAGE_DRIVER, default 'local'). */
 @Injectable()
 export class PhotoStorageService {
+  private readonly driver: PenyimpananFoto;
+
+  constructor(localDiskStorage: LocalDiskStorage, s3Storage: S3Storage) {
+    this.driver = getAppConfig().storage.driver === 's3' ? s3Storage : localDiskStorage;
+  }
+
   save(folder: PhotoFolder, id: string, base64: string): string {
-    const dir = join(UPLOADS_ROOT, folder);
-    if (!existsSync(dir)) {
-      mkdirSync(dir, { recursive: true });
-    }
-    const raw = base64.replace(DATA_URL_PREFIX, '');
-    const filePath = join(dir, `${id}.jpg`);
-    writeFileSync(filePath, Buffer.from(raw, 'base64'));
-    return `/uploads/${folder}/${id}.jpg`;
+    return this.driver.simpan(folder, id, base64);
+  }
+
+  remove(publicPath: string): void {
+    this.driver.hapus(publicPath);
   }
 }

@@ -4,6 +4,7 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
+import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Tooltip, alpha } from '@mui/material';
 
 import { SHELL_BAR_HEIGHT, SIDE_NAV_COLLAPSED_WIDTH, SIDE_NAV_EXPANDED_WIDTH } from './constants';
@@ -20,6 +21,7 @@ const NAV_ENTRIES: NavEntry[] = [
   { to: '/p5m', label: 'P5M', icon: <GroupsOutlinedIcon fontSize="small" /> },
   { to: '/peta', label: 'Peta', icon: <MapOutlinedIcon fontSize="small" /> },
   { to: '/unit', label: 'Unit', icon: <LocalShippingOutlinedIcon fontSize="small" /> },
+  { to: '/kepatuhan', label: 'Kepatuhan', icon: <VerifiedUserOutlinedIcon fontSize="small" /> },
 ];
 
 function isSelected(pathname: string, to: string): boolean {

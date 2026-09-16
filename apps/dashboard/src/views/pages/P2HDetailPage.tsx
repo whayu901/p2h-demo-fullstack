@@ -21,7 +21,6 @@ import {
 import {
   HASIL_ITEM_LABELS,
   PERNYATAAN_OPERATOR,
-  PESAN_MENUNGGU_PENGAWAS,
   PESAN_STOP_OPERASI,
   SHIFT_LABELS,
   UNIT_TYPE_LABELS,
@@ -31,12 +30,14 @@ import { useInspectionDetail } from '../../controllers/useInspectionDetail';
 import { AnchorTabs } from '../components/AnchorTabs';
 import { DataStateBox } from '../components/DataStateBox';
 import { FactItem } from '../components/FactItem';
+import { IntegrityChip } from '../components/IntegrityChip';
 import { P2HMiniMap } from '../components/map/MiniMap';
 import { ObjectStatus } from '../components/ObjectStatus';
 import { PageTitleBar } from '../components/PageTitleBar';
 import { Section } from '../components/Section';
 import { colorForHasilItem } from '../components/statusColors';
-import { formatDate, formatDateTime, formatHmKmRange, formatCoordinates } from '../format';
+import { TindakLanjutSection } from '../components/tindak-lanjut/TindakLanjutSection';
+import { formatDate, formatDateTime, formatHashShort, formatHmKmRange, formatCoordinates } from '../format';
 
 const ANCHOR_SECTIONS = [
   { id: 'informasi-umum', label: 'Informasi Umum' },
@@ -73,7 +74,10 @@ export function P2HDetailPage(): React.JSX.Element {
                   {UNIT_TYPE_LABELS[inspection.unit.type]} · {inspection.unit.site}
                 </Typography>
               </Box>
-              <ObjectStatus status={inspection.statusKelayakan} size="large" />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <IntegrityChip integritas={inspection.integritas} />
+                <ObjectStatus status={inspection.statusKelayakan} size="large" />
+              </Box>
             </Box>
 
             <Stack direction="row" spacing={4} sx={{ mt: 3, flexWrap: 'wrap', rowGap: 2 }}>
@@ -246,42 +250,16 @@ export function P2HDetailPage(): React.JSX.Element {
                   </Link>
                 </Box>
               ) : null}
+              {inspection.integritas?.hashRecord ? (
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
+                  Hash bukti: <code>{formatHashShort(inspection.integritas.hashRecord)}</code>
+                </Typography>
+              ) : null}
             </Paper>
           </Section>
 
           <Section id="tindak-lanjut" title="Tindak Lanjut">
-            <Paper sx={{ p: 3 }}>
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <Typography variant="caption" color="text.secondary" component="div">
-                    Rekomendasi mekanik
-                  </Typography>
-                  {inspection.rekomendasiMekanik ? (
-                    <Typography variant="body2" sx={{ mt: 0.5 }}>
-                      {inspection.rekomendasiMekanik}
-                    </Typography>
-                  ) : (
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, fontStyle: 'italic' }}>
-                      {PESAN_MENUNGGU_PENGAWAS}
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <Typography variant="caption" color="text.secondary" component="div">
-                    Keputusan pengawas
-                  </Typography>
-                  {inspection.keputusanPengawas ? (
-                    <Typography variant="body2" sx={{ mt: 0.5 }}>
-                      {inspection.keputusanPengawas}
-                    </Typography>
-                  ) : (
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, fontStyle: 'italic' }}>
-                      {PESAN_MENUNGGU_PENGAWAS}
-                    </Typography>
-                  )}
-                </Grid>
-              </Grid>
-            </Paper>
+            <TindakLanjutSection inspection={inspection} />
           </Section>
         </>
       ) : null}

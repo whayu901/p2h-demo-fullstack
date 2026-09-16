@@ -7,7 +7,7 @@ Throwaway demo for the client meeting. Three apps in one npm-workspaces monorepo
 | Shared types + checklists | `packages/shared` | TypeScript | – |
 | API | `apps/api` | NestJS 11, TypeORM, SQLite file | 3000 (bound to `0.0.0.0`) |
 | Dashboard | `apps/dashboard` | React 19, Vite 8, TanStack Query, MUI 9 (SAP Fiori theme) | 5173 |
-| Mobile | `apps/mobile` | Expo SDK 57, expo-router, expo-sqlite | Expo Go |
+| Mobile | `apps/mobile-app` | Expo SDK 57, expo-router, expo-sqlite | Expo Go |
 
 The point of the demo: **the mobile app works with zero internet, and data appears on the dashboard once the phone can reach the laptop again.**
 
@@ -57,7 +57,7 @@ Find the laptop's LAN IP:
 ipconfig getifaddr en0
 ```
 
-Put it in `apps/mobile/.env` (copy from `.env.example`):
+Put it in `apps/mobile-app/.env` (copy from `.env.example`):
 
 ```
 EXPO_PUBLIC_API_URL=http://<LAN-IP>:3000
@@ -146,3 +146,22 @@ API: one Nest module per domain (`units`, `inspections`, `safety-talks`, `sync`,
 ## Out of scope
 
 Auth, roles, approvals, user management, push notifications, background sync, offline maps, image storage service, tests, CI, Docker, dark mode, i18n, form builder.
+
+## Boilerplate produksi (aktif tapi default mati)
+
+Lihat `docs/ROADMAP-PRODUKSI.md` dan `docs/KEPATUHAN-PDP.md`. Ringkasnya:
+
+| Kapabilitas | Cara mengaktifkan | Catatan |
+|---|---|---|
+| Autentikasi + RBAC | `AUTH_ENABLED=true` + `AUTH_JWKS_URL`/`AUTH_ISSUER`/`AUTH_AUDIENCE` | Default mati → demo jalan tanpa login. Tabel izin ada di `packages/shared/src/peran.ts` (satu sumber, dipakai API + dashboard) |
+| Simulasi peran (demo) | Chip **Mode demo** di dashboard | Mengirim header `X-Demo-Peran`; hanya dihormati saat `AUTH_ENABLED=false` |
+| Alur tindak lanjut | Aktif | `POST /inspections/:id/rekomendasi` (Mekanik) → `/keputusan` (Pengawas) |
+| Audit trail hash-chain | Aktif | `GET /audit`, `GET /audit/verifikasi`. Append-only; **tidak ikut terhapus** saat reset demo |
+| Tanda tangan elektronik | Aktif sebagai `DEMO_HASH` | Ganti dengan PSrE tersertifikasi lewat `PenyediaTandaTangan` |
+| Integritas bukti | Aktif | HP mengirim `lokasiMock`, akurasi, dan `waktuPerangkat`; server menandai GPS palsu / jam menyimpang |
+| Retensi server + hak subjek data | `RETENTION_CRON_ENABLED=true` | `GET /pdp/retensi`, `POST /pdp` (akses / penghapusan → anonimisasi) |
+| Postgres | `DB_TYPE=postgres` + migrasi | `synchronize` dipaksa mati di luar SQLite |
+| Penyimpanan S3 | `STORAGE_DRIVER=s3` | Adapter masih stub |
+| Webhook ERP/CMMS | `INTEGRATION_WEBHOOK_URL=...` | Dipicu saat inspeksi `STOP_OPERASI` masuk |
+
+Semua env var didokumentasikan di `apps/api/.env.example`. Test: `npm test -w api`. CI: `.github/workflows/ci.yml`.

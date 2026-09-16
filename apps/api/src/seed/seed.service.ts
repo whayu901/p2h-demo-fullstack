@@ -1,7 +1,14 @@
 import { Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { getChecklist, hitungStatusKelayakan, SEED_UNITS, type HasilItemP2H, type UnitType } from '@p2h/shared';
+import {
+  getChecklist,
+  hitungStatusKelayakan,
+  statusTindakLanjutAwal,
+  SEED_UNITS,
+  type HasilItemP2H,
+  type UnitType,
+} from '@p2h/shared';
 import { toLocalDateString } from '../common/date.util';
 import { UnitEntity } from '../units/unit.entity';
 import { InspectionEntity } from '../inspections/inspection.entity';
@@ -92,6 +99,9 @@ export class SeedService implements OnApplicationBootstrap {
         statusKelayakan,
         // Seed records are treated as already synced at the moment they occurred.
         diterimaPada: dibuatPada,
+        tindakLanjut: { status: statusTindakLanjutAwal(statusKelayakan), rekomendasi: null, keputusan: null },
+        // Integrity checks only apply to records actually submitted through sync.
+        integritas: null,
       });
     });
 
@@ -126,6 +136,8 @@ export class SeedService implements OnApplicationBootstrap {
         catatan: template.catatan,
         dibuatPada,
         diterimaPada: dibuatPada,
+        // Integrity checks only apply to records actually submitted through sync.
+        integritas: null,
       });
     });
 

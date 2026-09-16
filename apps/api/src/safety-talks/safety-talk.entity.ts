@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import type { PesertaP5M, Shift } from '@p2h/shared';
+import type { IntegritasRecord, PesertaP5M, Shift } from '@p2h/shared';
 
 /** A submitted P5M safety talk (table: safety_talks). */
 @Entity({ name: 'safety_talks' })
@@ -68,4 +68,8 @@ export class SafetyTalkEntity {
   /** ISO 8601 timestamp for when the API first stored this record. */
   @Column('text')
   diterimaPada!: string;
+
+  /** Evidence integrity checks (GPS mock / clock skew / payload hash) computed at sync time. */
+  @Column('simple-json', { nullable: true })
+  integritas!: IntegritasRecord | null;
 }

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import {
+  Box,
   MenuItem,
   Paper,
   Table,
@@ -17,18 +18,23 @@ import {
   SHIFT_LABELS,
   STATUS_KELAYAKAN,
   STATUS_KELAYAKAN_LABELS,
+  STATUS_TINDAK_LANJUT,
+  STATUS_TINDAK_LANJUT_LABELS,
   UNIT_TYPES,
   UNIT_TYPE_LABELS,
   type Shift,
   type StatusKelayakan,
+  type StatusTindakLanjut,
   type UnitType,
 } from '@p2h/shared';
 
 import { useInspectionList } from '../../controllers/useInspectionList';
 import { DataStateBox } from '../components/DataStateBox';
 import { FilterBar } from '../components/FilterBar';
+import { IntegrityChip } from '../components/IntegrityChip';
 import { ObjectStatus } from '../components/ObjectStatus';
 import { PageTitleBar } from '../components/PageTitleBar';
+import { TindakLanjutStatus } from '../components/TindakLanjutStatus';
 import { formatDate, formatDateTime } from '../format';
 
 export function P2HListPage(): React.JSX.Element {
@@ -89,6 +95,20 @@ export function P2HListPage(): React.JSX.Element {
             </MenuItem>
           ))}
         </TextField>
+        <TextField
+          select
+          label="Status tindak lanjut"
+          value={list.draft.statusTindakLanjut}
+          onChange={(event) => list.setStatusTindakLanjut(event.target.value as StatusTindakLanjut | '')}
+          sx={{ minWidth: 200 }}
+        >
+          <MenuItem value="">Semua</MenuItem>
+          {STATUS_TINDAK_LANJUT.map((status) => (
+            <MenuItem key={status} value={status}>
+              {STATUS_TINDAK_LANJUT_LABELS[status]}
+            </MenuItem>
+          ))}
+        </TextField>
       </FilterBar>
 
       <Typography variant="h6" sx={{ mb: 1.5 }}>
@@ -111,6 +131,7 @@ export function P2HListPage(): React.JSX.Element {
                 <TableCell>Operator</TableCell>
                 <TableCell>Shift</TableCell>
                 <TableCell>Status Kelayakan</TableCell>
+                <TableCell>Tindak Lanjut</TableCell>
                 <TableCell align="right">Temuan</TableCell>
                 <TableCell>
                   <Tooltip title="Waktu data diterima server">
@@ -127,7 +148,12 @@ export function P2HListPage(): React.JSX.Element {
                   onClick={() => navigate(`/p2h/${inspection.id}`)}
                   sx={{ cursor: 'pointer' }}
                 >
-                  <TableCell>{formatDate(inspection.tanggal)}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography component="span">{formatDate(inspection.tanggal)}</Typography>
+                      <IntegrityChip integritas={inspection.integritas} />
+                    </Box>
+                  </TableCell>
                   <TableCell>
                     <Typography sx={{ fontWeight: 600 }}>{inspection.unit.code}</Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -143,6 +169,9 @@ export function P2HListPage(): React.JSX.Element {
                   <TableCell>{SHIFT_LABELS[inspection.shift]}</TableCell>
                   <TableCell>
                     <ObjectStatus status={inspection.statusKelayakan} />
+                  </TableCell>
+                  <TableCell>
+                    <TindakLanjutStatus status={inspection.tindakLanjut.status} />
                   </TableCell>
                   <TableCell align="right">
                     <Typography sx={{ color: inspection.jumlahTemuan > 0 ? 'error.main' : 'text.primary' }}>

@@ -1,12 +1,15 @@
 import 'reflect-metadata';
 import { mkdirSync } from 'node:fs';
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { UPLOADS_ROOT } from './common/paths.util';
 import { listLanIPv4Addresses } from './common/lan-ip.util';
+import { getAppConfig } from './config/app-config';
 
 const PORT = 3000;
+const logger = new Logger('Bootstrap');
 
 async function bootstrap(): Promise<void> {
   mkdirSync(UPLOADS_ROOT, { recursive: true });
@@ -23,9 +26,12 @@ async function bootstrap(): Promise<void> {
 }
 
 function logStartupBanner(): void {
-  console.log(`API siap: http://localhost:${PORT}`);
+  logger.log(`API siap: http://localhost:${PORT}`);
   for (const address of listLanIPv4Addresses()) {
-    console.log(`Untuk HP (EXPO_PUBLIC_API_URL): http://${address}:${PORT}`);
+    logger.log(`Untuk HP (EXPO_PUBLIC_API_URL): http://${address}:${PORT}`);
+  }
+  if (!getAppConfig().auth.enabled) {
+    logger.warn('AUTH NONAKTIF — mode demo. Jangan dipakai di produksi.');
   }
 }
 

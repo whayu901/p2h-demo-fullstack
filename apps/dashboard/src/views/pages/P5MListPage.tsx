@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import {
+  Box,
   Paper,
   Table,
   TableBody,
@@ -14,6 +15,7 @@ import {
 import { useSafetyTalkList } from '../../controllers/useSafetyTalkList';
 import { DataStateBox } from '../components/DataStateBox';
 import { FilterBar } from '../components/FilterBar';
+import { IntegrityChip } from '../components/IntegrityChip';
 import { PageTitleBar } from '../components/PageTitleBar';
 import { formatDate } from '../format';
 
@@ -61,7 +63,10 @@ export function P5MListPage(): React.JSX.Element {
               {list.safetyTalks.map((talk) => (
                 <TableRow key={talk.id} hover onClick={() => navigate(`/p5m/${talk.id}`)} sx={{ cursor: 'pointer' }}>
                   <TableCell>
-                    <Typography>{formatDate(talk.tanggal)}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography>{formatDate(talk.tanggal)}</Typography>
+                      <IntegrityChip integritas={talk.integritas} />
+                    </Box>
                     <Typography variant="caption" color="text.secondary">
                       {talk.jamMulai}
                     </Typography>

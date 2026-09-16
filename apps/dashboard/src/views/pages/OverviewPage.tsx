@@ -47,13 +47,13 @@ export function OverviewPage(): React.JSX.Element {
       <DataStateBox isLoading={overview.isLoading} isError={overview.isError} error={overview.error}>
         {stats ? (
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
               <KpiTile label="P2H hari ini" value={stats.p2hHariIni} footer="Inspeksi masuk" />
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
               <KpiTile label="P5M hari ini" value={stats.p5mHariIni} footer="Safety talk terlaksana" />
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
               <KpiTile
                 label="Unit STOP OPERASI"
                 value={stats.unitStopOperasi}
@@ -61,8 +61,16 @@ export function OverviewPage(): React.JSX.Element {
                 tone={stats.unitStopOperasi > 0 ? 'danger' : 'default'}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
               <KpiTile label="Temuan terbuka" value={stats.temuanTerbuka} footer="Item tidak normal hari ini" />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
+              <KpiTile
+                label="Menunggu tindak lanjut"
+                value={stats.menungguTindakLanjut}
+                footer="Inspeksi belum diselesaikan"
+                tone={stats.menungguTindakLanjut > 0 ? 'warning' : 'default'}
+              />
             </Grid>
           </Grid>
         ) : null}

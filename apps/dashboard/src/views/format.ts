@@ -71,3 +71,19 @@ export function formatCoordinates(latitude: number | null, longitude: number | n
   }
   return `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
 }
+
+/** Formats a person's name as up to two uppercase initials, e.g. "Budi Santoso" → "BS", for an avatar. */
+export function formatInitials(nama: string): string {
+  const parts = nama.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) {
+    return '?';
+  }
+  const first = parts[0][0] ?? '';
+  const last = parts.length > 1 ? (parts[parts.length - 1][0] ?? '') : '';
+  return `${first}${last}`.toUpperCase();
+}
+
+/** Shortens a hash/hex string to its first N characters followed by an ellipsis, e.g. "a1b2c3d4e5f6…". */
+export function formatHashShort(hash: string, length = 12): string {
+  return `${hash.slice(0, length)}…`;
+}

@@ -3,6 +3,7 @@ import { Button, Stack, Typography } from '@mui/material';
 
 import type { P2HGeoPoint, P5MGeoPoint } from '../../../controllers/useGeoMap';
 import { formatDate } from '../../format';
+import { IntegrityChip } from '../IntegrityChip';
 import { ObjectStatus } from '../ObjectStatus';
 
 interface DetailLinkButtonProps {
@@ -32,6 +33,7 @@ export function P2HPopupContent({ point }: P2HPopupContentProps): React.JSX.Elem
         {formatDate(point.tanggal)} · {point.namaOperator}
       </Typography>
       <ObjectStatus status={point.statusKelayakan} />
+      <IntegrityChip integritas={point.integritas} />
       <Typography variant="body2">{point.jumlahTemuan} temuan</Typography>
       <DetailLinkButton to={`/p2h/${point.id}`} />
     </Stack>
@@ -54,6 +56,7 @@ export function P5MPopupContent({ point }: P5MPopupContentProps): React.JSX.Elem
       <Typography variant="body2">
         Peserta hadir: {point.jumlahHadir} dari {point.jumlahPeserta}
       </Typography>
+      <IntegrityChip integritas={point.integritas} />
       <DetailLinkButton to={`/p5m/${point.id}`} />
     </Stack>
   );

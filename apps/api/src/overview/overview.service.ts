@@ -15,12 +15,14 @@ export class OverviewService {
   ) {}
 
   async getOverview(): Promise<OverviewResponse> {
-    const [inspectionStats, p5mHariIni, recentInspections, recentSafetyTalks] = await Promise.all([
-      this.inspectionsService.getTodayStats(),
-      this.safetyTalksService.countToday(),
-      this.inspectionsService.findRecent(RECENT_LIMIT),
-      this.safetyTalksService.findRecent(RECENT_LIMIT),
-    ]);
+    const [inspectionStats, p5mHariIni, recentInspections, recentSafetyTalks, menungguTindakLanjut] =
+      await Promise.all([
+        this.inspectionsService.getTodayStats(),
+        this.safetyTalksService.countToday(),
+        this.inspectionsService.findRecent(RECENT_LIMIT),
+        this.safetyTalksService.findRecent(RECENT_LIMIT),
+        this.inspectionsService.countMenungguTindakLanjut(),
+      ]);
 
     const recent = [...recentInspections.map(toInspectionRecent), ...recentSafetyTalks.map(toSafetyTalkRecent)]
       .sort((a, b) => (a.dibuatPada < b.dibuatPada ? 1 : -1))
@@ -32,6 +34,7 @@ export class OverviewService {
         p5mHariIni,
         unitStopOperasi: inspectionStats.unitStopOperasi,
         temuanTerbuka: inspectionStats.temuanTerbuka,
+        menungguTindakLanjut,
       },
       recent,
     };

@@ -1,4 +1,5 @@
 import type { Shift } from './enums';
+import type { IntegritasRecord } from './integritas';
 
 /** One attendee of a P5M safety talk. */
 export interface PesertaP5M {
@@ -46,6 +47,11 @@ export interface SafetyTalkDto {
   catatan: string;
   /** ISO 8601 timestamp. */
   dibuatPada: string;
+  /** ISO 8601 timestamp reported by the device clock, for integrity checks. */
+  waktuPerangkat?: string;
+  /** True if the device's location provider was flagged as mocked (fake GPS). */
+  lokasiMock?: boolean;
+  akurasiLokasiMeter?: number | null;
 }
 
 /** The shape of a P5M safety talk as returned by the API to the dashboard. */
@@ -54,6 +60,8 @@ export interface SafetyTalkView extends Omit<SafetyTalkDto, 'fotoBase64'> {
   jumlahHadir: number;
   /** ISO 8601 timestamp for when the API received/stored this record. */
   diterimaPada: string;
+  /** Evidence integrity checks for this submission. Always supplied by the API. */
+  integritas: IntegritasRecord | null;
 }
 
 /** Counts how many listed attendees were marked present. */

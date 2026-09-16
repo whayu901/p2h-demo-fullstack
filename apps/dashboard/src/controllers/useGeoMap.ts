@@ -1,6 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import { hitungPesertaHadir, type InspectionView, type SafetyTalkView, type StatusKelayakan } from '@p2h/shared';
+import {
+  hitungPesertaHadir,
+  type InspectionView,
+  type IntegritasRecord,
+  type SafetyTalkView,
+  type StatusKelayakan,
+} from '@p2h/shared';
 
 import { fetchInspections, fetchSafetyTalks } from '../models/api-client';
 import {
@@ -49,6 +55,7 @@ export interface P2HGeoPoint {
   /** 1-based position of this point within its unit's route, in time order. */
   sequence: number;
   totalInUnit: number;
+  integritas: IntegritasRecord | null;
 }
 
 export interface P5MGeoPoint {
@@ -60,6 +67,7 @@ export interface P5MGeoPoint {
   namaPemimpin: string;
   jumlahHadir: number;
   jumlahPeserta: number;
+  integritas: IntegritasRecord | null;
 }
 
 export interface GeoRoute {
@@ -172,6 +180,7 @@ export function useGeoMap(): GeoMapController {
           jumlahTemuan: inspection.jumlahTemuan,
           sequence: index + 1,
           totalInUnit: group.inspections.length,
+          integritas: inspection.integritas,
         })),
       ),
     [routeGroups],
@@ -201,6 +210,7 @@ export function useGeoMap(): GeoMapController {
         namaPemimpin: talk.namaPemimpin,
         jumlahHadir: hitungPesertaHadir(talk.peserta),
         jumlahPeserta: talk.peserta.length,
+        integritas: talk.integritas,
       })),
     [locatedSafetyTalks],
   );

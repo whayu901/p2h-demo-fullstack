@@ -8,6 +8,8 @@ export interface OverviewStats {
   unitStopOperasi: number;
   /** TIDAK_NORMAL items across today's inspections; there is no closing workflow in the demo. */
   temuanTerbuka: number;
+  /** Inspections (all time) whose tindak lanjut status is not SELESAI or TIDAK_DIPERLUKAN. */
+  menungguTindakLanjut: number;
 }
 
 /** A single row in the dashboard's "recent activity" feed. */
